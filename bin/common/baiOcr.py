@@ -28,8 +28,12 @@ def get_position(queryStr, file):
     """ 将结果返回 """
     for j in range(len(result_ocr)):
         result_ocr_temp = result_ocr[j]
-        if queryStr in result_ocr_temp['words']: 
+        print(result_ocr_temp)
+        if queryStr in result_ocr_temp['words']:
             list_position.append(result_ocr_temp['location']['width']/2 + result_ocr_temp['location']['left'])
             list_position.append(result_ocr_temp['location']['height']/2 + result_ocr_temp['location']['top'])
     return list_position
 
+if __name__ == '__main__':
+    print(os.getcwd())
+    print(get_position("签到", "..\\..\\file\\15-22-17screen.png"))
