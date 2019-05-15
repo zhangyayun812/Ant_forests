@@ -48,3 +48,6 @@ def get_position_only_str(str):
 
 
 
+if __name__ == '__main__':
+    # print(os.getcwd())
+    print(get_position("云闪付", "..\\..\\file\\yun.png"))

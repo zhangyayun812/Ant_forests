@@ -83,62 +83,84 @@ def main():
     while circulation:
         now_time = datetime.datetime.now().strftime('%H:%M')
         log_tools.log('info', now_time)
+        #time.sleep(2)
+
 
         # 时间是17分到19分就一直截取自己准备进行收取
         if now_time == '07:17' or now_time == '07:18' or now_time == '07:19':
+        #if now_time == '20:05' or now_time == '07:18':
+            count_detail = True
             # 如果count_self为0代表为第一次收取自己，如果不是第一次就直接截图不用判断是否在好友列表
             if count_self == 0:
                 ## time.sleep(2)
                 now_times = datetime.datetime.now().strftime('%H-%M-%S')
                 screenshot.check_screenshot("{}screen-more.png".format(now_times))
-                positions = baiOcr.get_position("查看", "..\\file\\{}screen-more.png".format(now_times))
-                if len(positions) == 0:
+                positions = baiOcr.get_position("排行", "..\\file\\{}screen-more.png".format(now_times))
+                if len(positions) != 0:
                     log_tools.log('info', "返回上一级，准备收取自己")
                     adb_tools.keyevent_by_num(4)
                     time.sleep(2)
                 log_tools.log('info', "--------------------进入自己界面")
-                adb_tools.swipe_by_2point(100, 300, 100, 2000)
+                adb_tools.swipe_by_2point(100, 400, 100, 2000)
+                time.sleep(1)
+                adb_tools.swipe_by_2point(100, 400, 100, 2000)
+                time.sleep(1)
+                #经常有提示合种浇水，所以先点击一次关闭
+                adb_tools.tap_by_xy(138, 688)
+                time.sleep(1)
+                #经常有提示合种浇水，所以先点击一次关闭
+                adb_tools.tap_by_xy(137, 731)
+
+
+
             ## time.sleep(2)
-            adb_tools.swipe_by_2point(100, 300, 100, 2000)
+            adb_tools.swipe_by_2point(100, 400, 100, 2000)
             log_tools.log('info', "开始截自己图")
             now_times = datetime.datetime.now().strftime('%H-%M-%S')
             screenshot.pull_screenshot("{}screen-self.png".format(now_times))
-            im_self = Image.open('..\\file\\{}screen-self.png'.format(now_times))
-            self_energy_point_count = 0
-            self_energy_point_boolean = False
-            self_energy_position_handx = 0
-            self_energy_position_handy = 0
-            self_energy_w, self_energy_h = im_self.size
-            self_operator_energy_point_list = []
-            for self_energy_i in range(0, self_energy_w):
-                self_energy_point_boolean = False
-                for self_energy_j in range(0, int(self_energy_h / 2)):
-                    pixel = im_self.getpixel((self_energy_i, self_energy_j))
+            # im_self = Image.open('..\\file\\{}screen-self.png'.format(now_times))
+            # self_energy_point_count = 0
+            # self_energy_point_boolean = False
+            # self_energy_position_handx = 0
+            # self_energy_position_handy = 0
+            # self_energy_w, self_energy_h = im_self.size
+            # self_operator_energy_point_list = []
+            # for self_energy_i in range(0, self_energy_w):
+            #     self_energy_point_boolean = False
+            #     for self_energy_j in range(0, int(self_energy_h / 2)):
+            #         pixel = im_self.getpixel((self_energy_i, self_energy_j))
+            #
+            #         if pixel[0] == 180 and pixel[1] == 240 and pixel[2] == 32:
+            #             # print(pixel)
+            #             self_energy_point_count += 1
+            #             self_energy_position_handx += self_energy_i
+            #             self_energy_position_handy += self_energy_j
+            #             self_energy_point_boolean = True
+            #
+            #     if (not self_energy_point_boolean) and self_energy_point_count != 0 and self_energy_point_count > 200:
+            #         log_tools.log('info', "current self_energy_point_count {}".format(self_energy_point_count))
+            #         log_tools.log('info', "--Found self_energy points")
+            #         self_energy_position_handx = round(self_energy_position_handx / self_energy_point_count, 0)
+            #         self_energy_position_handy = round(self_energy_position_handy / self_energy_point_count, 0)
+            #         self_operator_energy_point_list.append(self_energy_position_handx)
+            #         self_operator_energy_point_list.append(self_energy_position_handy)
+            #         self_energy_position_handx = 0
+            #         self_energy_position_handy = 0
+            #         self_energy_point_count = 0
+            #         self_energy_point_boolean = False
 
-                    if pixel[0] == 180 and pixel[1] == 240 and pixel[2] == 32:
-                        # print(pixel)
-                        self_energy_point_count += 1
-                        self_energy_position_handx += self_energy_i
-                        self_energy_position_handy += self_energy_j
-                        self_energy_point_boolean = True
-
-                if (not self_energy_point_boolean) and self_energy_point_count != 0 and self_energy_point_count > 200:
-                    log_tools.log('info', "current self_energy_point_count {}".format(self_energy_point_count))
-                    log_tools.log('info', "--Found self_energy points")
-                    self_energy_position_handx = round(self_energy_position_handx / self_energy_point_count, 0)
-                    self_energy_position_handy = round(self_energy_position_handy / self_energy_point_count, 0)
-                    self_operator_energy_point_list.append(self_energy_position_handx)
-                    self_operator_energy_point_list.append(self_energy_position_handy)
-                    self_energy_position_handx = 0
-                    self_energy_position_handy = 0
-                    self_energy_point_count = 0
-                    self_energy_point_boolean = False
-
-            for self_energy_ii in range(0, len(self_operator_energy_point_list) - 1, 2):
+            # for self_energy_ii in range(0, len(self_operator_energy_point_list) - 1, 2):
+            #     log_tools.log('info', "进行收取")
+            #     adb_tools.tap_by_xy(self_operator_energy_point_list[self_energy_ii],
+            #                         self_operator_energy_point_list[self_energy_ii + 1])
+            #     time.sleep(1)
+            log_tools.log('info', "判断自己的行走是否有能量可取")
+            positions = baiOcr.get_position("行走", "..\\file\\{}screen-self.png".format(now_times))
+            if len(positions) != 0:
                 log_tools.log('info', "进行收取")
-                adb_tools.tap_by_xy(self_operator_energy_point_list[self_energy_ii],
-                                    self_operator_energy_point_list[self_energy_ii + 1])
-                time.sleep(1)
+                position_x = int(positions[0])
+                position_y = int(positions[1]) - 80
+                adb_tools.tap_by_xy(position_x, position_y)
             log_tools.log('info', "--------第{}检查完自己的能量".format(count_self))
             count_self += 1
 
@@ -146,8 +168,10 @@ def main():
         else:
             # count_detail第一次进入到森林，所以需要往下滑动。且滑动后需要将count_detail置为false代表已经进入到过森林
             if count_detail:
-                time.sleep(8)
-                adb_tools.swipe_by_2point(100, 1600, 100, 100)
+                time.sleep(10)
+                adb_tools.swipe_by_2point(100, 1300, 100, 100)
+                time.sleep(1)
+                adb_tools.swipe_by_2point(100, 1300, 100, 100)
 
                 # 进入森林后开始向下滑动
                 try:
@@ -216,6 +240,9 @@ def main():
                     adb_tools.keyevent_by_num(4)
                     try:
                         time.sleep(2)
+                        adb_tools.swipe_by_2point(100, 1300, 100, 100)
+                        time.sleep(1)
+                        adb_tools.swipe_by_2point(100, 1300, 100, 100)
                         now_times = datetime.datetime.now().strftime('%H-%M-%S')
                         screenshot.check_screenshot("{}screen-more.png".format(now_times))
                         positions = baiOcr.get_position("查看更多好友", "..\\file\\{}screen-more.png".format(now_times))
@@ -288,7 +315,8 @@ def main():
                 for j in range(800, w):
                     pixel = im.getpixel((j, i))
 
-                    if (pixel[0] == 48) and (pixel[1] == 191) and (pixel[2] == 108):
+                    # if (pixel[0] == 48) and (pixel[1] == 191) and (pixel[2] == 108):
+                    if (pixel[0] == 29) and (pixel[1] == 160) and (pixel[2] == 109):
                         green_point_count += 1
                         position_handx += j
                         position_handy += i
@@ -300,7 +328,7 @@ def main():
                     log_tools.log('info', "current green_point_count {}".format(green_point_count))
                     # print('{} {} {}'.format(position_handx, position_handy, i))
                     log_tools.log('info', "--Found green points")
-                    if green_point_count < 2000 and green_point_count > 1600:
+                    if green_point_count < 2000 and green_point_count > 1300:
                         log_tools.log('info', "----Found green hand")
                         position_handx = round(position_handx / green_point_count, 0)
                         position_handy = round(position_handy / green_point_count, 0)
